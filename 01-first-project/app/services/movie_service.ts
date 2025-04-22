@@ -1,4 +1,3 @@
-import Movie from '#models/movie'
 import { Exception } from '@adonisjs/core/exceptions'
 import app from '@adonisjs/core/services/app'
 import { MarkdownFile } from '@dimerapp/markdown'
