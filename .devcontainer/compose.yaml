@@ -16,7 +16,7 @@ services:
     image: postgres:17.4-alpine
     restart: unless-stopped
     ports:
-      - 5433:5432
+      - 5432:5432
     networks:
       - db
     volumes:
@@ -27,15 +27,15 @@ services:
     image: redis:latest
     restart: unless-stopped
     ports:
-      - 6380:6379
+      - 6379:6379
     networks:
       - redis
   mailer:
     image: mailtutan/mailtutan:latest
     restart: unless-stopped
     ports:
-      - 1081:1080
-      - 1026:1025
+      - 1080:1080
+      - 1025:1025
     networks:
       - mailer
 

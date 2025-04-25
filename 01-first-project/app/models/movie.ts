@@ -1,7 +1,6 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
 import MovieService from '#services/movie_service'
 import { toHtml } from '@dimerapp/markdown/utils'
+import cache from '#services/cache_service'
 
 export default class Movie {
   declare title: string
@@ -30,7 +29,11 @@ export default class Movie {
     return movies
   }
 
-  static async findBySlug(slug: string) {
+  static async findBySlug(slug: string): Promise<Movie> {
+    if (await cache.has(slug)) {
+      console.log('Cache hit: ' + slug)
+      return cache.get(slug)
+    }
     const md = await MovieService.read(slug)
     const movie = new Movie()
     movie.title = md.frontmatter.title
@@ -41,6 +44,9 @@ export default class Movie {
     if (!movie) {
       throw new Error(`Movie with slug ${slug} not found`)
     }
+
+    await cache.set(slug, movie)
+
     return movie
   }
 }

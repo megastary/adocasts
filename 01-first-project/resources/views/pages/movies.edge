@@ -65,12 +65,25 @@
   @stack('dumper')
 </head>
 
-<body class="min-h-screen w-screen font-sans">
+<body class="font-sans">
+
+  @include('partials/nav')
+
   <h1 class="text-center text-blue-500">{{ title }}</h1>
 
   <ul class="list-none text-center">
-    @each(movie in movies)
-    <li class="py-2">
+    @each((movie, index) in movies)
+    @let(isFirstMovie = index === 0)
+    {{-- @assign(isFirstMovie = false) Change variable value --}}
+    <li class="{{
+      html.classNames([
+        'py-2 border',
+        isFirstMovie ? 'border-blue-500' : 'border-slate-300',
+        {
+        'font-bold': isFirstMovie,
+        }
+      ])
+    }}">
       <a href="{{ route('movies.show', { slug: movie.slug }) }}">
         <strong>{{ movie.title }}</strong> - {{ movie.summary }}
       </a>
@@ -81,6 +94,7 @@
   <p class="text-center">
     <a href="{{ route('home') }}" class="text-primary hover:text-primary-lighter">Go back to home</a>
   </p>
+  {{-- {{ inspect(state)}} --}}
 </body>
 
 </html>

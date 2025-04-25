@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import Movie from '#models/movie'
+const RedisController = () => import('#controllers/redis_controller')
 const MoviesController = () => import('#controllers/movies_controller')
 
 router
@@ -27,3 +28,8 @@ router
   .get('/movies/:slug', [MoviesController, 'show'])
   .as('movies.show')
   .where('slug', router.matchers.slug())
+
+// This route must be above /redis/:slug otherwise it will never be matched as it will be taken for slug
+router.post('/redis/flush', [RedisController, 'flush']).as('redis.flush')
+
+router.post('/redis/:slug', [RedisController, 'destroy']).as('redis.delete')

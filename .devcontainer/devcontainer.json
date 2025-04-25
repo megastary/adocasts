@@ -16,7 +16,8 @@
         "jripouteau.adonis-vscode-extension",
         "AdonisJS.vscode-edge",
         "jripouteau.japa-vscode",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss"
       ]
     }
   }
