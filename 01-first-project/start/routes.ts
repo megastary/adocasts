@@ -30,6 +30,5 @@ router
   .where('slug', router.matchers.slug())
 
 // This route must be above /redis/:slug otherwise it will never be matched as it will be taken for slug
-router.post('/redis/flush', [RedisController, 'flush']).as('redis.flush')
-
-router.post('/redis/:slug', [RedisController, 'destroy']).as('redis.delete')
+router.delete('/redis/flush', [RedisController, 'flush']).as('redis.flush')
+router.delete('/redis/:slug', [RedisController, 'destroy']).as('redis.delete')

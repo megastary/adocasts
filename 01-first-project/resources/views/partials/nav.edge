@@ -1,8 +1,7 @@
 {{-- Nav --}}
 <div class="grow mt-10 mb-8 px-16 xl:px-8 max-w-screen-xl mx-auto">
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-    <article
-      class="relative py-4 px-5 bg-white border border-transparent rounded-lg hover:border-sand-8 hover:shadow-sm transition duration-100 ease-in-out group">
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+    <article class="mx-auto relative py-4 px-5 bg-white border border-transparent rounded-lg hover:border-sand-8 hover:shadow-sm transition duration-100 ease-in-out group">
       <h2 class="font-semibold text-sand-12">
         <a href="{{ route('home') }}" target="_self" class="flex flex-row gap-2">
           <span class="bg-[#D5EAE7] h-6 w-6 flex justify-center items-center rounded">
@@ -20,8 +19,7 @@
       </h2>
     </article>
 
-    <article
-      class="relative py-4 px-5 bg-white border border-transparent rounded-lg hover:border-sand-8 hover:shadow-sm transition duration-100 ease-in-out group">
+    <article class="mx-auto relative py-4 px-5 bg-white border border-transparent rounded-lg hover:border-sand-8 hover:shadow-sm transition duration-100 ease-in-out group">
       <h2 class="font-semibold text-sand-12">
         <a href="{{ route('movies.index') }}" target="_self" class="flex flex-row gap-2">
           <span class="bg-[#D5EAE7] h-6 w-6 flex justify-center items-center rounded">
@@ -39,14 +37,23 @@
       </h2>
     </article>
 
-    <article
-      class="relative py-4 px-5 bg-white border border-transparent rounded-lg hover:border-sand-8 hover:shadow-sm transition duration-100 ease-in-out group">
+    <article class="mx-auto relative py-4 px-5 bg-white border border-transparent rounded-lg hover:border-sand-8 hover:shadow-sm transition duration-100 ease-in-out group">
       <form method="POST" action="/redis/flush">
         {{ csrfField() }}
-        <button type="submit"
-          class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md shadow-sm transition-colors">
+        <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md shadow-sm transition-colors">
           Flush Redis </button>
       </form>
     </article>
+  </div>
+
+  <div class="fixed bottom-0 right-3 flex gap-3">
+    {{-- This requires in config/app.ts to enable allowMethodSpoofing to specify method using query param --}}
+    <form action="{{ route('redis.flush', {}, { qs: { _method: 'DELETE'}})}}" method="POST">
+      {{ csrfField() }}
+      @button({type: 'submit', class: 'rounded-b-none'} )
+      @svg('ph:trash-fill', { class: 'mr-2'})
+      Flush Redis Db
+      @end
+    </form>
   </div>
 </div>
