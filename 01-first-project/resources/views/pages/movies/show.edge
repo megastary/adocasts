@@ -1,15 +1,15 @@
-@layout({ title: title })
+@layout({ title: movie.title })
 @slot('meta')
-<meta name="description" content="{{ summary }}" />
+<meta name="description" content="{{ movie.description }}" />
 @endslot
 
 <div class="flex justify-center">
   <div class="w-1/2 flex flex-wrap -mx-6">
-    <h1>{{ title }}</h1>
+    <h1>{{ movie.title }}</h1>
 
-    @if (abstract)
+    @if (movie.abstract)
     <div class="my-8 bg-slate-100 rounded-xl p-8">
-      {{{ abstract }}}
+      {{{ movie.abstract }}} a
     </div>
     @endif
 

@@ -15,9 +15,9 @@ export default class MoviesController {
   }
 
   async show({ view, params }: HttpContext) {
-    const movie = await Movie.findBySlug(params.slug)
+    const movie = await Movie.findByOrFail('slug', params.slug)
 
-    view.share(movie)
+    view.share({ movie })
 
     return view.render('pages/movies/show')
   }
