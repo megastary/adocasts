@@ -1,6 +1,7 @@
-import { BaseModel, column, scope } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, scope } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import MovieStatuses from '#enums/movie_statuses'
+import string from '@adonisjs/core/helpers/string'
 
 export default class Movie extends BaseModel {
   @column({ isPrimary: true })
@@ -49,6 +50,59 @@ export default class Movie extends BaseModel {
       .andWhere('statusId', MovieStatuses.RELEASED)
       .andWhereNotNull('releasedAt')
   })
+
+  static notReleased = scope((query) => {
+    query.where((group) => {
+      group
+        .whereNot('statusId', MovieStatuses.RELEASED)
+        .orWhereNull('releasedAt')
+        .orWhere('releasedAt', '>', DateTime.now().toSQL())
+    })
+  })
+
+  @beforeCreate()
+  static async slugify(movie: Movie) {
+    if (movie.slug) return
+
+    const slug = string.slug(movie.title, {
+      replacement: '-',
+      lower: true,
+      strict: true,
+    })
+
+    // Returns all other records using this exact slug or incremented variant
+    const rows = await Movie.query()
+      .select('slug')
+      .whereRaw('lower(??) = ?', ['slug', slug])
+      .orWhereRaw('lower(??) like ?', ['slug', `${slug}-%`])
+
+    // If no records returned, we use unique slug
+    if (!rows.length) {
+      movie.slug = slug
+      return
+    }
+
+    // This will calculate next available increment number
+    const incrementors = rows.reduce<number[]>((result, row) => {
+      const tokens = row.slug.toLocaleLowerCase().split(`${slug}-`)
+
+      if (tokens.length < 2) {
+        return result
+      }
+
+      const increment = Number(tokens.at(1))
+
+      if (!Number.isNaN(increment)) {
+        result.push(increment)
+      }
+
+      return result
+    }, [])
+
+    const increment = incrementors.length ? Math.max(...incrementors) + 1 : 1
+
+    movie.slug = `${slug}-${increment}`
+  }
   // @column({ isPrimary: true })
   // declare id: number
 
